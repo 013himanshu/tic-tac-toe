@@ -40,42 +40,84 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        binding.reset.setOnClickListener {
+        initializeBoardStatus()
 
+        binding.reset.setOnClickListener {
+            turn_count = 0
+            player = true
+            initializeBoardStatus()
         }
 
 
     }
 
+    private fun initializeBoardStatus() {
+        for (i: Int in 0..2) {
+            for (j: Int in 0..2) {
+                board_status[0][0] == -1
+                board[i][j].isEnabled = true
+                board[i][j].text = ""
+            }
+        }
+    }
+
     override fun onClick(view: View) {
         when(view.id) {
             R.id.button00 -> {
-
+                updateValue(row = 0, col = 0, player = player)
             }
             R.id.button01 -> {
-
+                updateValue(row = 0, col = 1, player = player)
             }
             R.id.button02 -> {
-
+                updateValue(row = 0, col = 2, player = player)
             }
             R.id.button10 -> {
-
+                updateValue(row = 1, col = 0, player = player)
             }
             R.id.button11 -> {
-
+                updateValue(row = 1, col = 1, player = player)
             }
             R.id.button12 -> {
-
+                updateValue(row = 1, col = 2, player = player)
             }
             R.id.button20 -> {
-
+                updateValue(row = 2, col = 0, player = player)
             }
             R.id.button21 -> {
-
+                updateValue(row = 2, col = 1, player = player)
             }
             R.id.button22 -> {
-
+                updateValue(row = 2, col = 2, player = player)
             }
         }
+        turn_count++
+        player = !player
+
+        if (player) {
+            updateDisplay("Player X Turn!")
+        }
+        else {
+            updateDisplay("Player 0 Turn!")
+        }
+
+        if (turn_count == 9) {
+            updateDisplay("Game Draw")
+        }
+    }
+
+    private fun updateDisplay(s: String) {
+        binding.turnOf.text = s
+    }
+
+    private fun updateValue(row: Int, col: Int, player: Boolean) {
+
+        val text: String = if (player) "X" else "0"
+        val value: Int = if (player) 1 else 0
+        board[row][col].apply {
+            isEnabled = false
+            setText(text)
+        }
+        board_status[row][col] = value
     }
 }
