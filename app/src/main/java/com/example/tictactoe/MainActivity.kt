@@ -52,14 +52,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initializeBoardStatus() {
+        binding.turnOf.text = "Player X Turn!"
         for (i: Int in 0..2) {
             for (j: Int in 0..2) {
-                board_status[0][0] == -1
+                board_status[i][j] = -1
                 board[i][j].isEnabled = true
                 board[i][j].text = ""
             }
         }
     }
+
 
     override fun onClick(view: View) {
         when(view.id) {
@@ -104,10 +106,70 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (turn_count == 9) {
             updateDisplay("Game Draw")
         }
+
+        checkWinner()
+    }
+
+    private fun checkWinner() {
+        // to check for rows (horizontal)...
+        for (i in 0..2) {
+            if (board_status[i][0] == board_status[i][1] && board_status[i][0] == board_status[i][2]) {
+                if(board_status[i][0] == 1) {
+                    updateDisplay("Player X is the WINNER!")
+                    break
+                }
+                else if (board_status[i][0] == 0) {
+                    updateDisplay("Player 0 is the WINNER!")
+                    break
+                }
+            }
+
+            // to check for columns winner (vartical)...
+            if (board_status[0][i] == board_status[1][i] && board_status[0][i] == board_status[2][i]) {
+                if(board_status[0][i] == 1) {
+                    updateDisplay("Player X is the WINNER!")
+                    break
+                }
+                else if (board_status[0][i] == 0) {
+                    updateDisplay("Player 0 is the WINNER!")
+                    break
+                }
+            }
+        }
+
+        //to check for first diagonal winner...
+        if (board_status[0][0] == board_status[1][1] && board_status[0][0] == board_status[2][2]) {
+            if(board_status[0][0] == 1) {
+                updateDisplay("Player X is the WINNER!")
+            }
+            else if (board_status[0][0] == 0) {
+                updateDisplay("Player 0 is the WINNER!")
+            }
+        }
+
+        //to check for second diagonal winner...
+        if (board_status[0][2] == board_status[1][1] && board_status[0][2] == board_status[2][0]) {
+            if(board_status[0][2] == 1) {
+                updateDisplay("Player X is the WINNER!")
+            }
+            else if (board_status[0][2] == 0) {
+                updateDisplay("Player 0 is the WINNER!")
+            }
+        }
+
     }
 
     private fun updateDisplay(s: String) {
         binding.turnOf.text = s
+        if (s.contains("WINNER")) disableButtons()
+    }
+
+    private fun disableButtons() {
+        for (i in 0..2) {
+            for (j in 0..2) {
+                board[i][j].isEnabled = false
+            }
+        }
     }
 
     private fun updateValue(row: Int, col: Int, player: Boolean) {
